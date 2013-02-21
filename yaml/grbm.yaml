@@ -1,0 +1,50 @@
+!obj:pylearn2.scripts.train.Train {
+    "dataset": &data !obj:pylearn2.datasets.mnist_variations.MNIST_variations {
+        "which_set": 'train',
+        "variation": &variation 'background_images',
+        "center": 1,
+        "shuffle": 1,
+        "one_hot": 1,
+        "gcn": 1,
+        "standardize_pixels": 0,
+    },
+    "model": &model !obj:rmmala_rbm.grbm.GaussianRBM {
+                "seed" : 123141,
+                "init_from" : "",
+                "batch_size" : &batch_size 32,
+                "n_v"  : 784,
+                "n_h"  : &n_h 500,
+                "neg_sample_steps" : 1,
+                "flags": {},
+                "lr_spec"  : {
+                    'type': 'linear',
+                    'start': 0.0010000,
+                    'end': 0.0010000
+                },
+                # WARNING: change default values before
+                "lr_mults": {},
+                "iscales" : {
+                    'Wv': 0.01,
+                    'hbias':0.,
+                    'lambd':1.0,
+                },
+                "clip_min" : {},
+                "l1"     : {},
+                "l2"     : {},
+                "sp_weight": {"h":0.},
+                "sp_targ"  : {"h":0.2},
+                "debug": True,
+                "save_every": 10000,
+                "save_at": [],
+                "max_updates": 10000000,
+                "my_save_path": "model",
+    },
+    "algorithm": !obj:rmmala_rbm.grbm.TrainingAlgorithm {
+               "batch_size": *batch_size,
+               "batches_per_iter" : 100,
+               "monitoring_batches": 11,
+               "monitoring_dataset": *data,
+    },
+    "callbacks": [],
+}
+
